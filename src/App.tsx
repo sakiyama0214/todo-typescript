@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import { Box, Center, ChakraProvider, Container, Select, Text } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import EditForm from './components/EditForm';
+import InputForm from './components/InputForm';
+import TodoList from './components/TodoList';
 
 export type Todo = {
     id: number,
@@ -16,6 +19,9 @@ const App: React.FC = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newTitle, setNewTitle] = useState<string>('');
   const [editId, setEditId] = useState<number>();
+  const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
+  const [filter, setFilter] = useState('');
+
   
 
   const handleSetTodoTitle = (e: any) => {
@@ -66,47 +72,64 @@ const App: React.FC = () => {
     ))
   }
 
+  useEffect(() => {
+    const filteringTodos = () => {
+      switch (filter) {
+        case 'notStarted':
+          setFilteredTodos(todos.filter((todo) => todo.status === 'notStarted'));
+          break;
+        case 'inProgress':
+          setFilteredTodos(todos.filter((todo) => todo.status === 'inProgress'));
+          break;
+        case 'done':
+          setFilteredTodos(todos.filter((todo) => todo.status === 'done'));
+          break;
+        default:
+          setFilteredTodos(todos);
+      }
+    };
+    filteringTodos();
+  }, [filter,todos]);
+
   return (
-    <>
-    {isEditing? (
-      <EditForm
-        newTitle={newTitle}
-        handleEditInputChange={handleEditInputChange}
-        handleEditTodo={handleAddTodo}
-        onClickBack={onClickBack}
-      />
-    ) : (
-      <div className='todoForm'>
-        <input
-        type='text'
-        placeholder='todoを入力'
-        value={todoTitle}
-        onChange={handleSetTodoTitle}
+    <ChakraProvider>
+      <Container>
+        <Center fontSize='30px' fontWeight='bold' p={'5'}>TODO LIST</Center>
+        {isEditing? (
+          <EditForm
+            newTitle={newTitle}
+            handleEditInputChange={handleEditInputChange}
+            handleEditTodo={handleEditTodo}
+            onClickBack={onClickBack}
+          />
+        ) : (
+          <InputForm
+            todoTitle={todoTitle}
+            handleSetTodoTitle={handleSetTodoTitle}
+            handleAddTodo={handleAddTodo}
+          />
+        )}
+        <Text fontWeight={'bold'} color='gray.700'>ソート</Text>
+        <Select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          width='180px'
+          pb={3}
+          mb={3}
+        >
+          <option value='all'>全て</option>
+          <option value='notStarted'>未着手</option>
+          <option value='inProgress'>作業中</option>
+          <option value='done'>完了</option>
+        </Select>
+        <TodoList
+        filteredTodos={filteredTodos}
+        handleStatusChange={handleStatusChange}
+        onClickDelete={onClickDelete}
+        onClickEdit={onClickEdit}
         />
-        <button onClick={handleAddTodo}>追加</button>
-      </div>
-    )}
-      
-      <div className='todoList'>
-        <ul>
-          {todos.map((todo) => {
-            return (
-              <li key={todo.id}>
-                <span>{todo.title}</span>
-                <select value={todo.status} onChange={(e) => handleStatusChange(todo.id, e)}>
-                  <option value='notStarted'>未着手</option>
-                  <option value='inProgress'>作業中</option>
-                  <option value='done'>完了</option>
-                </select>
-                <button onClick={() => onClickEdit(todo.title, todo.id)}>編集</button>
-                <button onClick={() => onClickDelete(todo)}>削除</button>
-              </li>
-            )
-          })}
-          
-        </ul>
-      </div>
-    </>
+      </Container>
+    </ChakraProvider>
   );
 }
 
