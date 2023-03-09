@@ -18,13 +18,13 @@ const App: React.FC = () => {
   const [todoId, setTodoId] = useState<number>(1);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newTitle, setNewTitle] = useState<string>('');
-  const [editId, setEditId] = useState<number>();
+  const [editId, setEditId] = useState<number>(0);
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState('');
 
   
 
-  const handleSetTodoTitle = (e: any) => {
+  const handleSetTodoTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTodoTitle(e.target.value);
   }
 
@@ -45,7 +45,7 @@ const App: React.FC = () => {
     setNewTitle(title);
   }
 
-  const handleEditInputChange = (e: any) => {
+  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewTitle(e.target.value);
   } 
 
@@ -62,7 +62,7 @@ const App: React.FC = () => {
     setNewTitle('');
   }
 
-  const handleStatusChange = (id: number, e: any) => {
+  const handleStatusChange = (id: number, e: React.ChangeEvent<HTMLSelectElement>) => {
     const newTodos = todos.map((todo) => {
       return ({...todo})
     });
@@ -123,6 +123,7 @@ const App: React.FC = () => {
           <option value='done'>完了</option>
         </Select>
         <TodoList
+        id={todoId}
         filteredTodos={filteredTodos}
         handleStatusChange={handleStatusChange}
         onClickDelete={onClickDelete}

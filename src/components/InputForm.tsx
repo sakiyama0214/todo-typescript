@@ -4,8 +4,8 @@ import React from 'react'
 
 type InputFormProps = {
     todoTitle: string;
-    handleSetTodoTitle: any;
-    handleAddTodo: any;
+    handleSetTodoTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleAddTodo: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 const InputForm:React.FC<InputFormProps> = ({todoTitle, handleSetTodoTitle, handleAddTodo}) => {
   return (

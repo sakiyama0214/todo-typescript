@@ -1,15 +1,15 @@
-import { Box, Button, Input } from '@chakra-ui/react';
+import { Box, Button, Flex, Input } from '@chakra-ui/react';
 import React from 'react'
 
 type EditProps = {
     newTitle: string;
-    handleEditInputChange: any;
-    handleEditTodo: any;
-    onClickBack: any;
+    handleEditInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleEditTodo: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+    onClickBack: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 const EditForm: React.FC<EditProps> = ({newTitle, handleEditInputChange, handleEditTodo, onClickBack}) => {
   return (
-        <Box>
+        <Flex>
             <Input
             type='text'
             placeholder='todoを編集'
@@ -22,18 +22,19 @@ const EditForm: React.FC<EditProps> = ({newTitle, handleEditInputChange, handleE
             />
             <Button onClick={handleEditTodo}
               py={2}
-              mb={1}
+              mt={5}
+              mr={3}
               backgroundColor={'cyan.200'}
               color='gray.600'
               _hover={{backgroundColor: 'cyan.300', color: 'gray.700'}}
             >編集</Button>
             <Button onClick={onClickBack}
               py={2}
-              mb={1}
+              mt={5}
               color='gray.600'
               _hover={{color: 'gray.700'}}
             >キャンセル</Button>
-        </Box>
+        </Flex>
   )
 }
 
